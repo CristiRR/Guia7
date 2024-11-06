@@ -1,10 +1,10 @@
 const newForm = document.getElementById("idNewForm");
 const buttonCrear = document.getElementById("idBtnCrear");
 const buttonAddElemento = document.getElementById("idBtnAddElement");
+const buttonValidar = document.getElementById("idBtnValidar"); // Añadido botón de validación
 const cmbElemento = document.getElementById("idCmbElemento");
 const tituloElemento = document.getElementById("idTituloElemento");
 const nombreElemento = document.getElementById("idNombreElemento");
-const buttonValidar = document.getElementById("idBtnValidar"); 
 const modal = new bootstrap.Modal(document.getElementById("idModal"), {});
 
 const verificarTipoElemento = function () {
@@ -131,15 +131,30 @@ buttonAddElemento.onclick = () => {
     }
 };
 
+// V
 buttonValidar.onclick = () => {
     let elementos = newForm.elements;
     let valid = true;
     for (let elemento of elementos) {
         if (elemento.type !== "submit" && elemento.type !== "button") {
-            if (elemento.value === "") {
-                valid = false;
-                alert(`El campo ${elemento.id} está vacío.`);
-                break;
+            if (elemento.type === "radio" || elemento.type === "checkbox") {
+                if (!elemento.checked) {
+                    valid = false;
+                    alert(`El campo ${elemento.id} no está seleccionado.`);
+                    break;
+                }
+            } else if (elemento.tagName === "SELECT") {
+                if (elemento.selectedIndex === 0) {
+                    valid = false;
+                    alert(`El campo ${elemento.id} no tiene una opción seleccionada.`);
+                    break;
+                }
+            } else {
+                if (elemento.value === "") {
+                    valid = false;
+                    alert(`El campo ${elemento.id} está vacío.`);
+                    break;
+                }
             }
         }
     }
